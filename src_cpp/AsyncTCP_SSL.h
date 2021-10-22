@@ -50,6 +50,8 @@
   #error This AsyncTCP_SSL library is supporting only ESP32
 #endif
 
+#define ASYNC_TCP_SSL_VERSION      "AsyncTCP_SSL v1.0.0"
+
 #define ASYNC_TCP_SSL_ENABLED       true
 
 #include "IPAddress.h"
