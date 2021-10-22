@@ -15,11 +15,12 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  
-  Version: 1.0.0
+  Version: 1.1.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0    K Hoang     21/10/2021 Initial coding to support only ESP32
+  1.1.0    K Hoang     22/10/2021 Fix bug. Enable coexistence with AsyncTCP
  *****************************************************************************************************************************/
  
 /*
@@ -50,7 +51,7 @@
   #error This AsyncTCP_SSL library is supporting only ESP32
 #endif
 
-#define ASYNC_TCP_SSL_VERSION      "AsyncTCP_SSL v1.0.0"
+#define ASYNC_TCP_SSL_VERSION      "AsyncTCP_SSL v1.1.0"
 
 #define ASYNC_TCP_SSL_ENABLED       true
 
@@ -85,12 +86,21 @@ class AsyncSSLClient;
 #define ASYNC_WRITE_FLAG_MORE   0x02    //will not send PSH flag, meaning that there should be more data to be sent before the application should react.
 #define SSL_HANDSHAKE_TIMEOUT   5000    // timeout to complete SSL handshake
 
+#if ASYNC_TCP_SSL_ENABLED
+typedef std::function<void(void*, AsyncSSLClient*)> AcConnectHandlerSSL;
+typedef std::function<void(void*, AsyncSSLClient*, size_t len, uint32_t time)> AcAckHandlerSSL;
+typedef std::function<void(void*, AsyncSSLClient*, int8_t error)> AcErrorHandlerSSL;
+typedef std::function<void(void*, AsyncSSLClient*, void *data, size_t len)> AcDataHandlerSSL;
+typedef std::function<void(void*, AsyncSSLClient*, struct pbuf *pb)> AcPacketHandlerSSL;
+typedef std::function<void(void*, AsyncSSLClient*, uint32_t time)> AcTimeoutHandlerSSL;
+#else
 typedef std::function<void(void*, AsyncSSLClient*)> AcConnectHandler;
 typedef std::function<void(void*, AsyncSSLClient*, size_t len, uint32_t time)> AcAckHandler;
 typedef std::function<void(void*, AsyncSSLClient*, int8_t error)> AcErrorHandler;
 typedef std::function<void(void*, AsyncSSLClient*, void *data, size_t len)> AcDataHandler;
 typedef std::function<void(void*, AsyncSSLClient*, struct pbuf *pb)> AcPacketHandler;
 typedef std::function<void(void*, AsyncSSLClient*, uint32_t time)> AcTimeoutHandler;
+#endif
 
 struct tcp_pcb;
 struct ip_addr;
@@ -166,6 +176,16 @@ class AsyncSSLClient
     IPAddress localIP();
     uint16_t  localPort();
 
+#if ASYNC_TCP_SSL_ENABLED
+    void onConnect(AcConnectHandlerSSL cb, void* arg = 0);     //on successful connect
+    void onDisconnect(AcConnectHandlerSSL cb, void* arg = 0);  //disconnected
+    void onAck(AcAckHandlerSSL cb, void* arg = 0);             //ack received
+    void onError(AcErrorHandlerSSL cb, void* arg = 0);         //unsuccessful connect or error
+    void onData(AcDataHandlerSSL cb, void* arg = 0);           //data received (called if onPacket is not used)
+    void onPacket(AcPacketHandlerSSL cb, void* arg = 0);       //data received
+    void onTimeout(AcTimeoutHandlerSSL cb, void* arg = 0);     //ack timeout
+    void onPoll(AcConnectHandlerSSL cb, void* arg = 0);        //every 125ms when connected
+#else
     void onConnect(AcConnectHandler cb, void* arg = 0);     //on successful connect
     void onDisconnect(AcConnectHandler cb, void* arg = 0);  //disconnected
     void onAck(AcAckHandler cb, void* arg = 0);             //ack received
@@ -174,6 +194,7 @@ class AsyncSSLClient
     void onPacket(AcPacketHandler cb, void* arg = 0);       //data received
     void onTimeout(AcTimeoutHandler cb, void* arg = 0);     //ack timeout
     void onPoll(AcConnectHandler cb, void* arg = 0);        //every 125ms when connected
+#endif
 
     void    ackPacket(struct pbuf * pb);//ack pbuf from onPacket
     size_t  ack(size_t len); //ack data that you have not acked using the method below
@@ -221,6 +242,24 @@ class AsyncSSLClient
     std::string _hostname;
     int8_t  _closed_slot;
 
+#if ASYNC_TCP_SSL_ENABLED
+    AcConnectHandlerSSL _connect_cb;
+    void* _connect_cb_arg;
+    AcConnectHandlerSSL _discard_cb;
+    void* _discard_cb_arg;
+    AcAckHandlerSSL _sent_cb;
+    void* _sent_cb_arg;
+    AcErrorHandlerSSL _error_cb;
+    void* _error_cb_arg;
+    AcDataHandlerSSL _recv_cb;
+    void* _recv_cb_arg;
+    AcPacketHandlerSSL _pb_cb;
+    void* _pb_cb_arg;
+    AcTimeoutHandlerSSL _timeout_cb;
+    void* _timeout_cb_arg;
+    AcConnectHandlerSSL _poll_cb;
+    void* _poll_cb_arg;
+#else
     AcConnectHandler _connect_cb;
     void* _connect_cb_arg;
     AcConnectHandler _discard_cb;
@@ -237,6 +276,7 @@ class AsyncSSLClient
     void* _timeout_cb_arg;
     AcConnectHandler _poll_cb;
     void* _poll_cb_arg;
+#endif
 
     bool _pcb_busy;
     uint32_t _pcb_sent_at;
@@ -282,23 +322,27 @@ class AsyncSSLClient
 };
 
 #if ASYNC_TCP_SSL_ENABLED
-typedef std::function<int(void* arg, const char *filename, uint8_t **buf)> AcSSlFileHandler;
+typedef std::function<int(void* arg, const char *filename, uint8_t **buf)> AcSSlFileHandlerSSL;
 #endif
 
 /////////////////////////////////////////////////
 
-class AsyncServer 
+class AsyncSSLServer 
 {
   public:
-    AsyncServer(IPAddress addr, uint16_t port);
-    AsyncServer(uint16_t port);
-    ~AsyncServer();
-    void onClient(AcConnectHandler cb, void* arg);
+    AsyncSSLServer(IPAddress addr, uint16_t port);
+    AsyncSSLServer(uint16_t port);
+    ~AsyncSSLServer();
+    //void onClient(AcConnectHandler cb, void* arg);
     
 #if ASYNC_TCP_SSL_ENABLED
+    void onClient(AcConnectHandlerSSL cb, void* arg);
+    
     // Dummy, so it compiles with ESP Async WebServer library enabled.
-    void onSslFileRequest(AcSSlFileHandler cb, void* arg) {};
+    void onSslFileRequest(AcSSlFileHandlerSSL cb, void* arg) {};
     void beginSecure(const char *cert, const char *private_key_file, const char *password) {};
+#else
+    void onClient(AcConnectHandler cb, void* arg);    
 #endif
 
     void    begin();
@@ -317,7 +361,13 @@ class AsyncServer
     bool      _noDelay;
     
     tcp_pcb*          _pcb;
+    
+#if ASYNC_TCP_SSL_ENABLED
+    AcConnectHandlerSSL  _connect_cb;
+#else    
     AcConnectHandler  _connect_cb;
+#endif
+    
     void*             _connect_cb_arg;
 
     int8_t _accept(tcp_pcb* newpcb, int8_t err);

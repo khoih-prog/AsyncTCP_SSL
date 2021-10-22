@@ -11,6 +11,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Releases v1.1.0](#Releases-v110)
   * [Initial Releases v1.0.0](#Initial-Releases-v100)
 
 ---
@@ -18,6 +19,10 @@
 
 ## Changelog
 
+### Releases v1.1.0
+
+1. Fix duplication bug when using `src_h`
+2. Enable coexistence with AsyncTCP
 
 ### Initial Releases v1.0.0
 

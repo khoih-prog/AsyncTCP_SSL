@@ -15,11 +15,12 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  
-  Version: 1.0.0
+  Version: 1.1.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0    K Hoang     21/10/2021 Initial coding to support only ESP32
+  1.1.0    K Hoang     22/10/2021 Fix bug. Enable coexistence with AsyncTCP
  *****************************************************************************************************************************/
  
 /*
@@ -145,7 +146,7 @@ static xQueueHandle _async_queue;
 static TaskHandle_t _async_service_task_handle = NULL;
 
 
-SemaphoreHandle_t _slots_lock;
+static SemaphoreHandle_t _slots_lock;
 const int _number_of_closed_slots = CONFIG_LWIP_MAX_ACTIVE_TCP;
 static int _closed_slots[_number_of_closed_slots];
 
@@ -289,7 +290,7 @@ static void _handle_async_event(lwip_event_packet_t * e)
   else if (e->event == LWIP_TCP_ACCEPT)
   {
     ATCP_HEXLOGINFO2("_handle_async_event: LWIP_TCP_ACCEPT =", (uint32_t) e->arg, (uint32_t) e->accept.client);
-    AsyncServer::_s_accepted(e->arg, e->accept.client);
+    AsyncSSLServer::_s_accepted(e->arg, e->accept.client);
   }
   else if (e->event == LWIP_TCP_DNS)
   {
@@ -968,49 +969,81 @@ AsyncSSLClient & AsyncSSLClient::operator+=(const AsyncSSLClient &other)
    Callback Setters
  * */
 
+#if ASYNC_TCP_SSL_ENABLED
+void AsyncSSLClient::onConnect(AcConnectHandlerSSL cb, void* arg)
+#else
 void AsyncSSLClient::onConnect(AcConnectHandler cb, void* arg)
+#endif
 {
   _connect_cb = cb;
   _connect_cb_arg = arg;
 }
 
+#if ASYNC_TCP_SSL_ENABLED
+void AsyncSSLClient::onDisconnect(AcConnectHandlerSSL cb, void* arg)
+#else
 void AsyncSSLClient::onDisconnect(AcConnectHandler cb, void* arg)
+#endif
 {
   _discard_cb = cb;
   _discard_cb_arg = arg;
 }
 
+#if ASYNC_TCP_SSL_ENABLED
+void AsyncSSLClient::onAck(AcAckHandlerSSL cb, void* arg)
+#else
 void AsyncSSLClient::onAck(AcAckHandler cb, void* arg)
+#endif
 {
   _sent_cb = cb;
   _sent_cb_arg = arg;
 }
 
+#if ASYNC_TCP_SSL_ENABLED
+void AsyncSSLClient::onError(AcErrorHandlerSSL cb, void* arg)
+#else
 void AsyncSSLClient::onError(AcErrorHandler cb, void* arg)
+#endif
 {
   _error_cb = cb;
   _error_cb_arg = arg;
 }
 
+#if ASYNC_TCP_SSL_ENABLED
+void AsyncSSLClient::onData(AcDataHandlerSSL cb, void* arg)
+#else
 void AsyncSSLClient::onData(AcDataHandler cb, void* arg)
+#endif
 {
   _recv_cb = cb;
   _recv_cb_arg = arg;
 }
 
+#if ASYNC_TCP_SSL_ENABLED
+void AsyncSSLClient::onPacket(AcPacketHandlerSSL cb, void* arg)
+#else
 void AsyncSSLClient::onPacket(AcPacketHandler cb, void* arg)
+#endif
 {
   _pb_cb = cb;
   _pb_cb_arg = arg;
 }
 
+#if ASYNC_TCP_SSL_ENABLED
+void AsyncSSLClient::onTimeout(AcTimeoutHandlerSSL cb, void* arg)
+#else
 void AsyncSSLClient::onTimeout(AcTimeoutHandler cb, void* arg)
+#endif
 {
   _timeout_cb = cb;
   _timeout_cb_arg = arg;
 }
 
+#if ASYNC_TCP_SSL_ENABLED
+void AsyncSSLClient::onPoll(AcConnectHandlerSSL cb, void* arg)
+#else
 void AsyncSSLClient::onPoll(AcConnectHandler cb, void* arg)
+#endif
 {
   _poll_cb = cb;
   _poll_cb_arg = arg;
@@ -1995,7 +2028,7 @@ void AsyncSSLClient::_s_ssl_error(void *arg, struct tcp_pcb *tcp, int8_t err)
   Async TCP Server
 */
 
-AsyncServer::AsyncServer(IPAddress addr, uint16_t port)
+AsyncSSLServer::AsyncSSLServer(IPAddress addr, uint16_t port)
   : _port(port)
   , _addr(addr)
   , _noDelay(false)
@@ -2004,7 +2037,7 @@ AsyncServer::AsyncServer(IPAddress addr, uint16_t port)
   , _connect_cb_arg(0)
 {}
 
-AsyncServer::AsyncServer(uint16_t port)
+AsyncSSLServer::AsyncSSLServer(uint16_t port)
   : _port(port)
   , _addr((uint32_t) IPADDR_ANY)
   , _noDelay(false)
@@ -2013,18 +2046,22 @@ AsyncServer::AsyncServer(uint16_t port)
   , _connect_cb_arg(0)
 {}
 
-AsyncServer::~AsyncServer()
+AsyncSSLServer::~AsyncSSLServer()
 {
   end();
 }
 
-void AsyncServer::onClient(AcConnectHandler cb, void* arg)
+#if ASYNC_TCP_SSL_ENABLED
+void AsyncSSLServer::onClient(AcConnectHandlerSSL cb, void* arg)
+#else
+void AsyncSSLServer::onClient(AcConnectHandler cb, void* arg)
+#endif
 {
   _connect_cb = cb;
   _connect_cb_arg = arg;
 }
 
-void AsyncServer::begin()
+void AsyncSSLServer::begin()
 {
   if (_pcb)
   {
@@ -2076,7 +2113,7 @@ void AsyncServer::begin()
   tcp_accept(_pcb, &_s_accept);
 }
 
-void AsyncServer::end()
+void AsyncSSLServer::end()
 {
   if (_pcb)
   {
@@ -2093,7 +2130,7 @@ void AsyncServer::end()
 }
 
 //runs on LwIP thread
-int8_t AsyncServer::_accept(tcp_pcb* pcb, int8_t err)
+int8_t AsyncSSLServer::_accept(tcp_pcb* pcb, int8_t err)
 {
   ATCP_HEXLOGDEBUG1("_accept: pcb =", (uint32_t) pcb);
   
@@ -2118,7 +2155,7 @@ int8_t AsyncServer::_accept(tcp_pcb* pcb, int8_t err)
   return ERR_OK;
 }
 
-int8_t AsyncServer::_accepted(AsyncSSLClient* client)
+int8_t AsyncSSLServer::_accepted(AsyncSSLClient* client)
 {
   if (_connect_cb)
   {
@@ -2128,17 +2165,17 @@ int8_t AsyncServer::_accepted(AsyncSSLClient* client)
   return ERR_OK;
 }
 
-void AsyncServer::setNoDelay(bool nodelay)
+void AsyncSSLServer::setNoDelay(bool nodelay)
 {
   _noDelay = nodelay;
 }
 
-bool AsyncServer::getNoDelay()
+bool AsyncSSLServer::getNoDelay()
 {
   return _noDelay;
 }
 
-uint8_t AsyncServer::status()
+uint8_t AsyncSSLServer::status()
 {
   if (!_pcb)
   {
@@ -2148,14 +2185,14 @@ uint8_t AsyncServer::status()
   return _pcb->state;
 }
 
-int8_t AsyncServer::_s_accept(void * arg, tcp_pcb * pcb, int8_t err)
+int8_t AsyncSSLServer::_s_accept(void * arg, tcp_pcb * pcb, int8_t err)
 {
-  return reinterpret_cast<AsyncServer*>(arg)->_accept(pcb, err);
+  return reinterpret_cast<AsyncSSLServer*>(arg)->_accept(pcb, err);
 }
 
-int8_t AsyncServer::_s_accepted(void *arg, AsyncSSLClient* client)
+int8_t AsyncSSLServer::_s_accepted(void *arg, AsyncSSLClient* client)
 {
-  return reinterpret_cast<AsyncServer*>(arg)->_accepted(client);
+  return reinterpret_cast<AsyncSSLServer*>(arg)->_accepted(client);
 }
 
 #endif /* ASYNCTCP_SSL_HPP_ */

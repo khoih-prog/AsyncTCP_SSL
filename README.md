@@ -22,11 +22,20 @@
   * [Use Arduino Library Manager](#use-arduino-library-manager)
   * [Manual Install](#manual-install)
   * [VS Code & PlatformIO](#vs-code--platformio)
+* [Note for Platform IO using ESP32 LittleFS](#note-for-platform-io-using-esp32-littlefs) 
+* [HOWTO Fix `Multiple Definitions` Linker Error](#howto-fix-multiple-definitions-linker-error)
+* [Note for Platform IO using ESP32 LittleFS](#note-for-platform-io-using-esp32-littlefs)
+* [HOWTO Use analogRead() with ESP32 running WiFi and/or BlueTooth (BT/BLE)](#howto-use-analogread-with-esp32-running-wifi-andor-bluetooth-btble)
+  * [1. ESP32 has 2 ADCs, named ADC1 and ADC2](#1--esp32-has-2-adcs-named-adc1-and-adc2)
+  * [2. ESP32 ADCs functions](#2-esp32-adcs-functions)
+  * [3. ESP32 WiFi uses ADC2 for WiFi functions](#3-esp32-wifi-uses-adc2-for-wifi-functions)
 * [Orignal documentation](#Orignal-documentation)
   * [AsyncSSLClient](#AsyncSSLClient)
 * [Debug Terminal Output Samples](#debug-terminal-output-samples) 
   * [1. AsyncHTTPSRequest_ESP on ESP32_DEV](#1-AsyncHTTPSRequest_ESP-on-ESP32_DEV)
   * [2. AsyncHTTPSRequest_ESP on ESP32S2_DEV](#2-AsyncHTTPSRequest_ESP-on-ESP32S2_DEV)
+  * [3. AsyncHTTPSRequest_ESP on ESP32C3_DEV](#3-AsyncHTTPSRequest_ESP-on-ESP32C3_DEV)
+  * [4. AsyncHTTPSRequest_ESP_WiFiManager on ESP32_DEV](#4-AsyncHTTPSRequest_ESP_WiFiManager-on-ESP32_DEV)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -114,6 +123,105 @@ Another way to install is to:
 ---
 
 
+### Note for Platform IO using ESP32 LittleFS
+
+In Platform IO, to fix the error when using [`LittleFS_esp32 v1.0`](https://github.com/lorol/LITTLEFS) for ESP32-based boards with ESP32 core v1.0.4- (ESP-IDF v3.2-), uncomment the following line
+
+from
+
+```
+//#define CONFIG_LITTLEFS_FOR_IDF_3_2   /* For old IDF - like in release 1.0.4 */
+```
+
+to
+
+```
+#define CONFIG_LITTLEFS_FOR_IDF_3_2   /* For old IDF - like in release 1.0.4 */
+```
+
+It's advisable to use the latest [`LittleFS_esp32 v1.0.5+`](https://github.com/lorol/LITTLEFS) to avoid the issue.
+
+Thanks to [Roshan](https://github.com/solroshan) to report the issue in [Error esp_littlefs.c 'utime_p'](https://github.com/khoih-prog/ESPAsync_WiFiManager/issues/28) 
+
+---
+---
+
+### HOWTO Fix `Multiple Definitions` Linker Error
+
+The current library implementation, using xyz-Impl.h instead of standard xyz.cpp, possibly creates certain `Multiple Definitions` Linker error in certain use cases. Although it's simple to just modify several lines of code, either in the library or in the application, the library is adding a separate source directory, named src_cpp, besides the standard src directory.
+
+To use the old standard cpp way, just 
+
+1. **Rename the h-only src directory into src_h.**
+2. **Then rename the cpp src_cpp directory into src.**
+3. Close then reopen the application code in Arduino IDE, etc. to recompile from scratch.
+
+---
+---
+
+### Note for Platform IO using ESP32 LittleFS
+
+In Platform IO, to fix the error when using [`LittleFS_esp32 v1.0`](https://github.com/lorol/LITTLEFS) for ESP32-based boards with ESP32 core v1.0.4- (ESP-IDF v3.2-), uncomment the following line
+
+from
+
+```
+//#define CONFIG_LITTLEFS_FOR_IDF_3_2   /* For old IDF - like in release 1.0.4 */
+```
+
+to
+
+```
+#define CONFIG_LITTLEFS_FOR_IDF_3_2   /* For old IDF - like in release 1.0.4 */
+```
+
+It's advisable to use the latest [`LittleFS_esp32 v1.0.5+`](https://github.com/lorol/LITTLEFS) to avoid the issue.
+
+Thanks to [Roshan](https://github.com/solroshan) to report the issue in [Error esp_littlefs.c 'utime_p'](https://github.com/khoih-prog/ESPAsync_WiFiManager/issues/28) 
+
+---
+---
+
+### HOWTO Use analogRead() with ESP32 running WiFi and/or BlueTooth (BT/BLE)
+
+Please have a look at [**ESP_WiFiManager Issue 39: Not able to read analog port when using the autoconnect example**](https://github.com/khoih-prog/ESP_WiFiManager/issues/39) to have more detailed description and solution of the issue.
+
+#### 1.  ESP32 has 2 ADCs, named ADC1 and ADC2
+
+#### 2. ESP32 ADCs functions
+
+- ADC1 controls ADC function for pins **GPIO32-GPIO39**
+- ADC2 controls ADC function for pins **GPIO0, 2, 4, 12-15, 25-27**
+
+#### 3.. ESP32 WiFi uses ADC2 for WiFi functions
+
+Look in file [**adc_common.c**](https://github.com/espressif/esp-idf/blob/master/components/driver/adc_common.c#L61)
+
+> In ADC2, there're two locks used for different cases:
+> 1. lock shared with app and Wi-Fi:
+>    ESP32:
+>         When Wi-Fi using the ADC2, we assume it will never stop, so app checks the lock and returns immediately if failed.
+>    ESP32S2:
+>         The controller's control over the ADC is determined by the arbiter. There is no need to control by lock.
+> 
+> 2. lock shared between tasks:
+>    when several tasks sharing the ADC2, we want to guarantee
+>    all the requests will be handled.
+>    Since conversions are short (about 31us), app returns the lock very soon,
+>    we use a spinlock to stand there waiting to do conversions one by one.
+> 
+> adc2_spinlock should be acquired first, then adc2_wifi_lock or rtc_spinlock.
+
+
+- In order to use ADC2 for other functions, we have to **acquire complicated firmware locks and very difficult to do**
+- So, it's not advisable to use ADC2 with WiFi/BlueTooth (BT/BLE).
+- Use ADC1, and pins GPIO32-GPIO39
+- If somehow it's a must to use those pins serviced by ADC2 (**GPIO0, 2, 4, 12, 13, 14, 15, 25, 26 and 27**), use the **fix mentioned at the end** of [**ESP_WiFiManager Issue 39: Not able to read analog port when using the autoconnect example**](https://github.com/khoih-prog/ESP_WiFiManager/issues/39) to work with ESP32 WiFi/BlueTooth (BT/BLE).
+
+---
+---
+
+
 ## Orignal documentation
 
 For ESP32, check [AsyncTCP Library](https://github.com/me-no-dev/AsyncTCP)
@@ -132,11 +240,11 @@ The base classes on which everything else is built. They expose all possible sce
 
 #### 1. AsyncHTTPSRequest_ESP on ESP32_DEV
 
-Following is the debug terminal when running example [AsyncHTTPSRequest_ESP](https://github.com/khoih-prog/AsyncHTTPSRequest_Generic/tree/main/examples/AsyncHTTPSRequest_ESP) on ESP32_DEV to demonstrate the operation of SSL Async HTTPS request, based on this [AsyncTCP_SSL Library](https://github.com/khoih-prog/AsyncTCP_SSL).
+Following is the debug terminal when running example [AsyncHTTPSRequest_ESP](https://github.com/khoih-prog/AsyncHTTPSRequest_Generic/tree/main/examples/AsyncHTTPSRequest_ESP) on ESP32_DEV to demonstrate the operation of SSL Async HTTPS request, using [AsyncTCP_SSL Library](https://github.com/khoih-prog/AsyncTCP_SSL).
 
 ```
 Starting AsyncHTTPSRequest_ESP using ESP32_DEV
-AsyncTCP_SSL v1.0.0
+AsyncTCP_SSL v1.1.0
 AsyncHTTPSRequest_Generic v1.0.0
 Connecting to WiFi SSID: HueNet1
 .......
@@ -182,12 +290,11 @@ week_number: 42
 
 #### 2. AsyncHTTPSRequest_ESP on ESP32S2_DEV
 
-Following is the debug terminal when running example [AsyncHTTPSRequest_ESP](https://github.com/khoih-prog/AsyncHTTPSRequest_Generic/tree/main/examples/AsyncHTTPSRequest_ESP) on ESP32S2_DEV to demonstrate the operation of SSL Async HTTPS request, based on this [AsyncTCP_SSL Library](https://github.com/khoih-prog/AsyncTCP_SSL).
+Following is the debug terminal when running example [AsyncHTTPSRequest_ESP](https://github.com/khoih-prog/AsyncHTTPSRequest_Generic/tree/main/examples/AsyncHTTPSRequest_ESP) on ESP32S2_DEV to demonstrate the operation of SSL Async HTTPS request, using [AsyncTCP_SSL Library](https://github.com/khoih-prog/AsyncTCP_SSL).
 
 ```
-
 Starting AsyncHTTPSRequest_ESP using ESP32S2_DEV
-AsyncTCP_SSL v1.0.0
+AsyncTCP_SSL v1.1.0
 AsyncHTTPSRequest_Generic v1.0.0
 Connecting to WiFi SSID: HueNet1
 .......
@@ -234,7 +341,75 @@ utc_datetime: 2021-10-22T03:19:43.835205+00:00
 utc_offset: -04:00
 week_number: 42
 **************************************
+```
 
+---
+
+#### 3. AsyncHTTPSRequest_ESP on ESP32C3_DEV
+
+Following is the debug terminal when running example [AsyncHTTPSRequest_ESP](https://github.com/khoih-prog/AsyncHTTPSRequest_Generic/tree/main/examples/AsyncHTTPSRequest_ESP) on ESP32C3_DEV to demonstrate the operation of SSL Async HTTPS request, using [AsyncTCP_SSL Library](https://github.com/khoih-prog/AsyncTCP_SSL).
+
+```
+Starting AsyncHTTPSRequest_ESP using ESP32C3_DEV
+AsyncTCP_SSL v1.1.0
+AsyncHTTPSRequest_Generic v1.0.0
+Connecting to WiFi SSID: HueNet1
+.........
+AsyncHTTPSRequest @ IP : 192.168.2.80
+
+**************************************
+abbreviation: EDT
+client_ip: aaa.bbb.ccc.ddd
+datetime: 2021-10-22T02:00:44.009661-04:00
+day_of_week: 5
+day_of_year: 295
+dst: true
+dst_from: 2021-03-14T07:00:00+00:00
+dst_offset: 3600
+dst_until: 2021-11-07T06:00:00+00:00
+raw_offset: -18000
+timezone: America/Toronto
+unixtime: 1634882444
+utc_datetime: 2021-10-22T06:00:44.009661+00:00
+utc_offset: -04:00
+week_number: 42
+**************************************
+```
+
+---
+
+#### 4. AsyncHTTPSRequest_ESP_WiFiManager on ESP32_DEV
+
+Following is the debug terminal when running example [AsyncHTTPSRequest_ESP_WiFiManager](https://github.com/khoih-prog/AsyncHTTPSRequest_Generic/tree/main/examples/AsyncHTTPSRequest_ESP_WiFiManager) on ESP32_DEV to demonstrate the operation of SSL Async HTTPS request, using [AsyncTCP_SSL Library](https://github.com/khoih-prog/AsyncTCP_SSL), and [ESPAsync_WiFiManager Library](https://github.com/khoih-prog/ESPAsync_WiFiManager)
+
+```
+Starting AsyncHTTPSRequest_ESP_WiFiManager using LittleFS on ESP32_DEV
+ESPAsync_WiFiManager v1.9.4
+AsyncTCP_SSL v1.1.0
+AsyncHTTPSRequest_Generic v1.0.0
+Stored: SSID = HueNet1, Pass = 12345678
+Got stored Credentials. Timeout 120s
+ConnectMultiWiFi in setup
+After waiting 11.38 secs more in setup(), connection result is connected. Local IP: 192.168.2.232
+H
+**************************************
+abbreviation: EDT
+client_ip: 216.154.33.167
+datetime: 2021-10-22T02:38:12.722777-04:00
+day_of_week: 5
+day_of_year: 295
+dst: true
+dst_from: 2021-03-14T07:00:00+00:00
+dst_offset: 3600
+dst_until: 2021-11-07T06:00:00+00:00
+raw_offset: -18000
+timezone: America/Toronto
+unixtime: 1634884692
+utc_datetime: 2021-10-22T06:38:12.722777+00:00
+utc_offset: -04:00
+week_number: 42
+**************************************
+H
 ```
 
 ---
