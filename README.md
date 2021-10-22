@@ -323,9 +323,9 @@ If you want to contribute to this project:
 
 ## Copyright
 
-Copyright 2016- Hristo Gochkov
-Copyright 2019- Maarten Fremouw
-Copyright 2019- Thorsten von Eicken
-Copyright 2021- Khoi Hoang
+- Copyright 2016- Hristo Gochkov
+- Copyright 2019- Maarten Fremouw
+- Copyright 2019- Thorsten von Eicken
+- Copyright 2021- Khoi Hoang
 
 
