@@ -394,7 +394,7 @@ After waiting 11.38 secs more in setup(), connection result is connected. Local 
 H
 **************************************
 abbreviation: EDT
-client_ip: 216.154.33.167
+client_ip: aaa.bbb.ccc.ddd
 datetime: 2021-10-22T02:38:12.722777-04:00
 day_of_week: 5
 day_of_year: 295
