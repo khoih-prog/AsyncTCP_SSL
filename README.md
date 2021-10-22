@@ -189,7 +189,7 @@ week_number: 42
 ```
 ---
 
-####21. AsyncHTTPSRequest_ESP on ESP32S2_DEV
+#### 2. AsyncHTTPSRequest_ESP on ESP32S2_DEV
 
 Following is the debug terminal when running example [AsyncHTTPSRequest_ESP](https://github.com/khoih-prog/AsyncHTTPSRequest_Generic/tree/main/examples/AsyncHTTPSRequest_ESP) on ESP32S2_DEV to demonstrate the operation of SSL Async HTTPS request, based on this [AsyncTCP_SSL Library](https://github.com/khoih-prog/AsyncTCP_SSL).
 
@@ -326,7 +326,7 @@ If you want to contribute to this project:
 
 ### License
 
-- The library is licensed under [GPLv3](https://github.com/khoih-prog/AsyncTCP_SSL/blob/main/LICENSE)
+- The library is licensed under [LGPLv3](https://github.com/khoih-prog/AsyncTCP_SSL/blob/main/LICENSE)
 
 ---
 
