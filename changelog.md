@@ -11,6 +11,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Releases v1.2.0](#Releases-v120)
   * [Releases v1.1.0](#Releases-v110)
   * [Initial Releases v1.0.0](#Initial-Releases-v100)
 
@@ -18,6 +19,12 @@
 ---
 
 ## Changelog
+
+### Releases v1.2.0
+
+1. Fix `multiple-definitions` linker error. Drop `src_cpp` and `src_h` directories
+2. Add example [multiFileProject](examples/multiFileProject) to demo for multiple-file project.
+3. Add `platformio.ini`
 
 ### Releases v1.1.0
 

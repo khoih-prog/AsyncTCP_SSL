@@ -15,12 +15,13 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  
-  Version: 1.1.0
+  Version: 1.2.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0    K Hoang     21/10/2021 Initial coding to support only ESP32
   1.1.0    K Hoang     22/10/2021 Fix bug. Enable coexistence with AsyncTCP
+  1.2.0    K Hoang     23/01/2022 Fix `multiple-definitions` linker error
  *****************************************************************************************************************************/
 
 #ifndef _ASYNC_TCP_SSL_LOGLEVEL_
@@ -120,6 +121,8 @@ typedef struct tcp_ssl_pcb tcp_ssl_t;
 static tcp_ssl_t * tcp_ssl_array = NULL;
 static int tcp_ssl_next_fd = 0;
 
+/////////////////////////////////////////////
+
 // tcp_ssl_recv attempts to read up to len bytes into buf from data already received.
 // It is called by mbedtls.
 int tcp_ssl_recv(void *ctx, unsigned char *buf, size_t len)
@@ -148,6 +151,8 @@ int tcp_ssl_recv(void *ctx, unsigned char *buf, size_t len)
 
   return recv_len;
 }
+
+/////////////////////////////////////////////
 
 // tcp_ssl_send attempts to send len bytes from buf.
 // It is called by mbedtls.
@@ -230,10 +235,14 @@ int tcp_ssl_send(void *ctx, const unsigned char *buf, size_t len)
   return tcp_len;
 }
 
+/////////////////////////////////////////////
+
 uint8_t tcp_ssl_has_client()
 {
   return _tcp_ssl_has_client;
 }
+
+/////////////////////////////////////////////
 
 tcp_ssl_t * tcp_ssl_new(struct tcp_pcb *tcp, void* arg)
 {
@@ -280,6 +289,8 @@ tcp_ssl_t * tcp_ssl_new(struct tcp_pcb *tcp, void* arg)
   return new_item;
 }
 
+/////////////////////////////////////////////
+
 tcp_ssl_t* tcp_ssl_get(struct tcp_pcb *tcp)
 {
   if (tcp == NULL)
@@ -296,6 +307,8 @@ tcp_ssl_t* tcp_ssl_get(struct tcp_pcb *tcp)
 
   return item;
 }
+
+/////////////////////////////////////////////
 
 int tcp_ssl_new_client(struct tcp_pcb *tcp, void *arg, const char* hostname, const char* root_ca, const size_t root_ca_len,
                        const char* cli_cert, const size_t cli_cert_len, const char* cli_key, const size_t cli_key_len)
@@ -468,6 +481,8 @@ int tcp_ssl_new_client(struct tcp_pcb *tcp, void *arg, const char* hostname, con
   return ERR_OK;
 }
 
+/////////////////////////////////////////////
+
 // Open an SSL connection using a PSK (pre-shared-key) cipher suite.
 int tcp_ssl_new_psk_client(struct tcp_pcb *tcp, void *arg, const char* psk_ident, const char* pskey)
 {
@@ -603,6 +618,8 @@ int tcp_ssl_new_psk_client(struct tcp_pcb *tcp, void *arg, const char* psk_ident
   return ERR_OK;
 }
 
+/////////////////////////////////////////////
+
 // tcp_ssl_write writes len bytes from data into the TLS connection. I.e., data is plaintext, gets
 // encrypted, and then transmitted on the TCP connection.
 int tcp_ssl_write(struct tcp_pcb *tcp, uint8_t *data, size_t len)
@@ -645,6 +662,8 @@ int tcp_ssl_write(struct tcp_pcb *tcp, uint8_t *data, size_t len)
   return tcp_ssl->last_wr;
 }
 
+/////////////////////////////////////////////
+
 /*
   typedef enum
   {
@@ -672,6 +691,8 @@ int tcp_ssl_write(struct tcp_pcb *tcp, uint8_t *data, size_t len)
 
 
 */
+
+/////////////////////////////////////////////
 
 // tcp_ssl_read is a callback that reads from the TLS connection, i.e., it calls mbedtls, which then
 // tries to read from the TCP connection and decrypts it, tcp_ssl_read then calls the application's
@@ -806,6 +827,8 @@ int tcp_ssl_read(struct tcp_pcb *tcp, struct pbuf *p)
   return total_bytes >= 0 ? 0 : total_bytes; // return error code
 }
 
+/////////////////////////////////////////////
+
 int tcp_ssl_free(struct tcp_pcb *tcp)
 {
   TCP_SSL_DEBUG("tcp_ssl_free(%x)\n", tcp);
@@ -873,10 +896,14 @@ int tcp_ssl_free(struct tcp_pcb *tcp)
   return 0;
 }
 
+/////////////////////////////////////////////
+
 bool tcp_ssl_has(struct tcp_pcb *tcp)
 {
   return tcp_ssl_get(tcp) != NULL;
 }
+
+/////////////////////////////////////////////
 
 void tcp_ssl_arg(struct tcp_pcb *tcp, void * arg)
 {
@@ -888,6 +915,8 @@ void tcp_ssl_arg(struct tcp_pcb *tcp, void * arg)
   }
 }
 
+/////////////////////////////////////////////
+
 void tcp_ssl_data(struct tcp_pcb *tcp, tcp_ssl_data_cb_t arg)
 {
   tcp_ssl_t * item = tcp_ssl_get(tcp);
@@ -897,6 +926,8 @@ void tcp_ssl_data(struct tcp_pcb *tcp, tcp_ssl_data_cb_t arg)
     item->on_data = arg;
   }
 }
+
+/////////////////////////////////////////////
 
 void tcp_ssl_handshake(struct tcp_pcb *tcp, tcp_ssl_handshake_cb_t arg)
 {
@@ -908,6 +939,8 @@ void tcp_ssl_handshake(struct tcp_pcb *tcp, tcp_ssl_handshake_cb_t arg)
   }
 }
 
+/////////////////////////////////////////////
+
 void tcp_ssl_err(struct tcp_pcb *tcp, tcp_ssl_error_cb_t arg)
 {
   tcp_ssl_t * item = tcp_ssl_get(tcp);
@@ -917,5 +950,7 @@ void tcp_ssl_err(struct tcp_pcb *tcp, tcp_ssl_error_cb_t arg)
     item->on_error = arg;
   }
 }
+
+/////////////////////////////////////////////
 
 //#endif // ASYNC_TCP_SSL_ENABLED

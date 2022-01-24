@@ -15,12 +15,13 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  
-  Version: 1.1.0
+  Version: 1.2.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0    K Hoang     21/10/2021 Initial coding to support only ESP32
   1.1.0    K Hoang     22/10/2021 Fix bug. Enable coexistence with AsyncTCP
+  1.2.0    K Hoang     23/01/2022 Fix `multiple-definitions` linker error
  *****************************************************************************************************************************/
 
 #ifndef LWIPR_MBEDTLS_H
@@ -47,13 +48,19 @@ extern "C" {
 #define ERR_TCP_SSL_INVALID_CLIENTFD_DATA -104
 #define ERR_TCP_SSL_INVALID_DATA          -105
 
+/////////////////////////////////////////////
+
 struct tcp_pcb;
 struct pbuf;
 struct tcp_ssl_pcb;
 
+/////////////////////////////////////////////
+
 typedef void (* tcp_ssl_data_cb_t)(void *arg, struct tcp_pcb *tcp, uint8_t * data, size_t len);
 typedef void (* tcp_ssl_handshake_cb_t)(void *arg, struct tcp_pcb *tcp, struct tcp_ssl_pcb* ssl);
 typedef void (* tcp_ssl_error_cb_t)(void *arg, struct tcp_pcb *tcp, int8_t error);
+
+/////////////////////////////////////////////
 
 uint8_t tcp_ssl_has_client();
 int     tcp_ssl_new_client(struct tcp_pcb *tcp, void *arg, const char* hostname, const char* root_ca, const size_t root_ca_len,
@@ -68,6 +75,8 @@ void    tcp_ssl_arg(struct tcp_pcb *tcp, void * arg);
 void    tcp_ssl_data(struct tcp_pcb *tcp, tcp_ssl_data_cb_t arg);
 void    tcp_ssl_handshake(struct tcp_pcb *tcp, tcp_ssl_handshake_cb_t arg);
 void    tcp_ssl_err(struct tcp_pcb *tcp, tcp_ssl_error_cb_t arg);
+
+/////////////////////////////////////////////
 
 #ifdef __cplusplus
 }
