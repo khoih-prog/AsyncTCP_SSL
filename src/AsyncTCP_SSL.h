@@ -15,13 +15,14 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  
-  Version: 1.2.0
+  Version: 1.3.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0    K Hoang     21/10/2021 Initial coding to support only ESP32
   1.1.0    K Hoang     22/10/2021 Fix bug. Enable coexistence with AsyncTCP
   1.2.0    K Hoang     23/01/2022 Fix `multiple-definitions` linker error
+  1.3.0    K Hoang     04/09/2022 Clean up. Remove hard-code if possible
  *****************************************************************************************************************************/
  
 /*

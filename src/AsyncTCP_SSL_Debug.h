@@ -15,13 +15,14 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  
-  Version: 1.2.0
+  Version: 1.3.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0    K Hoang     21/10/2021 Initial coding to support only ESP32
   1.1.0    K Hoang     22/10/2021 Fix bug. Enable coexistence with AsyncTCP
   1.2.0    K Hoang     23/01/2022 Fix `multiple-definitions` linker error
+  1.3.0    K Hoang     04/09/2022 Clean up. Remove hard-code if possible
  *****************************************************************************************************************************/
 
 #pragma once
@@ -64,6 +65,9 @@
 #define ATCP_LOGERROR2(x,y,z)    if(_ASYNC_TCP_SSL_LOGLEVEL_>0) { ATCP_PRINT_MARK; ATCP_PRINT(x); ATCP_PRINT_SP; ATCP_PRINT(y); ATCP_PRINT_SP; ATCP_PRINTLN(z); }
 #define ATCP_HEXLOGERROR2(x,y,z) if(_ASYNC_TCP_SSL_LOGLEVEL_>0) { ATCP_PRINT_MARK; ATCP_PRINT(x); ATCP_PRINT_SP0X; ATCP_PRINT(y, HEX); ATCP_PRINT_SP0X; ATCP_PRINTLN(z, HEX); }
 #define ATCP_LOGERROR3(x,y,z,w)  if(_ASYNC_TCP_SSL_LOGLEVEL_>0) { ATCP_PRINT_MARK; ATCP_PRINT(x); ATCP_PRINT_SP; ATCP_PRINT(y); ATCP_PRINT_SP; ATCP_PRINT(z); ATCP_PRINT_SP; ATCP_PRINTLN(w); }
+#define ATCP_LOGERROR5(x,y,z,w,xx,yy)  if(_ASYNC_TCP_SSL_LOGLEVEL_>0) { ATCP_PRINT_MARK; ATCP_PRINT(x); ATCP_PRINT_SP; ATCP_PRINT(y); ATCP_PRINT_SP; ATCP_PRINT(z); ATCP_PRINT_SP; ATCP_PRINT(w); ATCP_PRINT_SP; ATCP_PRINT(xx); ATCP_PRINT_SP; ATCP_PRINTLN(yy); }
+
+/////////////////////////////////////////////////////////
 
 #define ATCP_LOGWARN(x)          if(_ASYNC_TCP_SSL_LOGLEVEL_>1) { ATCP_PRINT_MARK; ATCP_PRINTLN(x); }
 #define ATCP_LOGWARN0(x)         if(_ASYNC_TCP_SSL_LOGLEVEL_>1) { ATCP_PRINT(x); }
@@ -72,6 +76,9 @@
 #define ATCP_LOGWARN2(x,y,z)     if(_ASYNC_TCP_SSL_LOGLEVEL_>1) { ATCP_PRINT_MARK; ATCP_PRINT(x); ATCP_PRINT_SP; ATCP_PRINT(y); ATCP_PRINT_SP; ATCP_PRINTLN(z); }
 #define ATCP_HEXLOGWARN2(x,y,z)  if(_ASYNC_TCP_SSL_LOGLEVEL_>1) { ATCP_PRINT_MARK; ATCP_PRINT(x); ATCP_PRINT_SP0X; ATCP_PRINT(y, HEX); ATCP_PRINT_SP0X; ATCP_PRINTLN(z, HEX); }
 #define ATCP_LOGWARN3(x,y,z,w)   if(_ASYNC_TCP_SSL_LOGLEVEL_>1) { ATCP_PRINT_MARK; ATCP_PRINT(x); ATCP_PRINT_SP; ATCP_PRINT(y); ATCP_PRINT_SP; ATCP_PRINT(z); ATCP_PRINT_SP; ATCP_PRINTLN(w); }
+#define ATCP_LOGWARN5(x,y,z,w,xx,yy)  if(_ASYNC_TCP_SSL_LOGLEVEL_>1) { ATCP_PRINT_MARK; ATCP_PRINT(x); ATCP_PRINT_SP; ATCP_PRINT(y); ATCP_PRINT_SP; ATCP_PRINT(z); ATCP_PRINT_SP; ATCP_PRINT(w); ATCP_PRINT_SP; ATCP_PRINT(xx); ATCP_PRINT_SP; ATCP_PRINTLN(yy); }
+
+/////////////////////////////////////////////////////////
 
 #define ATCP_LOGINFO(x)          if(_ASYNC_TCP_SSL_LOGLEVEL_>2) { ATCP_PRINT_MARK; ATCP_PRINTLN(x); }
 #define ATCP_LOGINFO0(x)         if(_ASYNC_TCP_SSL_LOGLEVEL_>2) { ATCP_PRINT(x); }
@@ -80,6 +87,9 @@
 #define ATCP_LOGINFO2(x,y,z)     if(_ASYNC_TCP_SSL_LOGLEVEL_>2) { ATCP_PRINT_MARK; ATCP_PRINT(x); ATCP_PRINT_SP; ATCP_PRINT(y); ATCP_PRINT_SP; ATCP_PRINTLN(z); }
 #define ATCP_HEXLOGINFO2(x,y,z)  if(_ASYNC_TCP_SSL_LOGLEVEL_>2) { ATCP_PRINT_MARK; ATCP_PRINT(x); ATCP_PRINT_SP0X; ATCP_PRINT(y, HEX); ATCP_PRINT_SP0X; ATCP_PRINTLN(z, HEX); }
 #define ATCP_LOGINFO3(x,y,z,w)   if(_ASYNC_TCP_SSL_LOGLEVEL_>2) { ATCP_PRINT_MARK; ATCP_PRINT(x); ATCP_PRINT_SP; ATCP_PRINT(y); ATCP_PRINT_SP; ATCP_PRINT(z); ATCP_PRINT_SP; ATCP_PRINTLN(w); }
+#define ATCP_LOGINFO5(x,y,z,w,xx,yy)  if(_ASYNC_TCP_SSL_LOGLEVEL_>2) { ATCP_PRINT_MARK; ATCP_PRINT(x); ATCP_PRINT_SP; ATCP_PRINT(y); ATCP_PRINT_SP; ATCP_PRINT(z); ATCP_PRINT_SP; ATCP_PRINT(w); ATCP_PRINT_SP; ATCP_PRINT(xx); ATCP_PRINT_SP; ATCP_PRINTLN(yy); }
+
+/////////////////////////////////////////////////////////
 
 #define ATCP_LOGDEBUG(x)         if(_ASYNC_TCP_SSL_LOGLEVEL_>3) { ATCP_PRINT_MARK; ATCP_PRINTLN(x); }
 #define ATCP_LOGDEBUG0(x)        if(_ASYNC_TCP_SSL_LOGLEVEL_>3) { ATCP_PRINT(x); }
@@ -88,5 +98,8 @@
 #define ATCP_LOGDEBUG2(x,y,z)    if(_ASYNC_TCP_SSL_LOGLEVEL_>3) { ATCP_PRINT_MARK; ATCP_PRINT(x); ATCP_PRINT_SP; ATCP_PRINT(y); ATCP_PRINT_SP; ATCP_PRINTLN(z); }
 #define ATCP_HEXLOGDEBUG2(x,y,z) if(_ASYNC_TCP_SSL_LOGLEVEL_>3) { ATCP_PRINT_MARK; ATCP_PRINT(x); ATCP_PRINT_SP0X; ATCP_PRINT(y, HEX); ATCP_PRINT_SP0X; ATCP_PRINTLN(z, HEX); }
 #define ATCP_LOGDEBUG3(x,y,z,w)  if(_ASYNC_TCP_SSL_LOGLEVEL_>3) { ATCP_PRINT_MARK; ATCP_PRINT(x); ATCP_PRINT_SP; ATCP_PRINT(y); ATCP_PRINT_SP; ATCP_PRINT(z); ATCP_PRINT_SP; ATCP_PRINTLN(w); }
+#define ATCP_LOGDEBUG5(x,y,z,w,xx,yy)  if(_ASYNC_TCP_SSL_LOGLEVEL_>3) { ATCP_PRINT_MARK; ATCP_PRINT(x); ATCP_PRINT_SP; ATCP_PRINT(y); ATCP_PRINT_SP; ATCP_PRINT(z); ATCP_PRINT_SP; ATCP_PRINT(w); ATCP_PRINT_SP; ATCP_PRINT(xx); ATCP_PRINT_SP; ATCP_PRINTLN(yy); }
+
+/////////////////////////////////////////////////////////
 
 #endif    //ASYNC_TCP_SSL_DEBUG_H

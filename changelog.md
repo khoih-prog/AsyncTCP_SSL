@@ -11,6 +11,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Releases v1.3.0](#Releases-v130)
   * [Releases v1.2.0](#Releases-v120)
   * [Releases v1.1.0](#Releases-v110)
   * [Initial Releases v1.0.0](#Initial-Releases-v100)
@@ -19,6 +20,13 @@
 ---
 
 ## Changelog
+
+### Releases v1.3.0
+
+1. Remove hard-code if possible
+2. Improve debug messages by adding functions to display `error/state messages` instead of `cryptic error/state number`
+3. Clean up
+4. Add support to `ESP32_S3`, using ESP32 core `v2.0.3`. **Don't use `ESP32_S3` with core v2.0.4**. Check [ESP32-S3 Powercycling right after uploading a sketch using Arduino IDE and Arduino Core 2.0.4 #7165](https://github.com/espressif/arduino-esp32/issues/7165)
 
 ### Releases v1.2.0
 

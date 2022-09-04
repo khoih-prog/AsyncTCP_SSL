@@ -5,16 +5,15 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](#Contributing)
 [![GitHub issues](https://img.shields.io/github/issues/khoih-prog/AsyncTCP_SSL.svg)](http://github.com/khoih-prog/AsyncTCP_SSL/issues)
 
-
-
-<a href="https://www.buymeacoffee.com/khoihprog6" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
-
+<a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Donate to my libraries using BuyMeACoffee" style="height: 50px !important;width: 181px !important;" ></a>
+<a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-orange.svg?logo=buy-me-a-coffee&logoColor=FFDD00" style="height: 20px !important;width: 200px !important;" ></a>
 
 ---
 ---
 
 ## Table of contents
 
+* [Important Note for ESP32_S3](#Important-Note-for-ESP32_S3)
 * [Important Change from v1.2.0](#Important-Change-from-v120)
 * [Why do we need this AsyncTCP_SSL library](#why-do-we-need-this-AsyncTCP_SSL-library)
   * [Features](#features)
@@ -42,6 +41,7 @@
   * [2. AsyncHTTPSRequest_ESP on ESP32S2_DEV](#2-AsyncHTTPSRequest_ESP-on-ESP32S2_DEV)
   * [3. AsyncHTTPSRequest_ESP on ESP32C3_DEV](#3-AsyncHTTPSRequest_ESP-on-ESP32C3_DEV)
   * [4. AsyncHTTPSRequest_ESP_WiFiManager on ESP32_DEV](#4-AsyncHTTPSRequest_ESP_WiFiManager-on-ESP32_DEV)
+  * [5. AsyncHTTPSRequest_ESP_Multi on ESP32S3_DEV](#5-AsyncHTTPSRequest_ESP_Multi-on-ESP32S3_DEV)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -55,9 +55,17 @@
 ---
 ---
 
+### Important Note for ESP32_S3
+
+**Don't use `ESP32_S3` with core v2.0.4**. Check [ESP32-S3 Powercycling right after uploading a sketch using Arduino IDE and Arduino Core 2.0.4 #7165](https://github.com/espressif/arduino-esp32/issues/7165)
+
+---
+
 ### Important Change from v1.2.0
 
 Please have a look at [HOWTO Fix `Multiple Definitions` Linker Error](#howto-fix-multiple-definitions-linker-error)
+
+---
 
 ### Why do we need this [AsyncTCP_SSL library](https://github.com/khoih-prog/AsyncTCP_SSL)
 
@@ -90,9 +98,10 @@ to apply the better and faster **asynchronous** feature of the **powerful** [Asy
 
 ### Currently supported Boards
 
-1. ESP32 boards, such as ESP32_DEV, etc.
-2. ESP32S2-based boards, such as ESP32S2_DEV, ESP32_S2 Saola, etc.
-3. ESP32C3-based boards, such as ESP32C3_DEV, etc.
+1. `ESP32` boards, such as ESP32_DEV, etc.
+2. `ESP32_S2`-based boards, such as ESP32S2_DEV, ESP32_S2 Saola, etc.
+3. `ESP32_C3`-based boards, such as ESP32C3_DEV, etc.
+4. `ESP32_S3`-based boards, such as ESP32S3_DEV, etc., using ESP32 core `v2.0.3`
 
 
 ---
@@ -101,7 +110,8 @@ to apply the better and faster **asynchronous** feature of the **powerful** [Asy
 ## Prerequisites
 
  1. [`Arduino IDE 1.8.19+` for Arduino](https://github.com/arduino/Arduino). [![GitHub release](https://img.shields.io/github/release/arduino/Arduino.svg)](https://github.com/arduino/Arduino/releases/latest)
- 2. [`ESP32 Core 2.0.2+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
+ 2. [`ESP32 Core 2.0.4+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/) for ESP32, ESP32_S2, ESP32_C3
+ 3. [`ESP32 Core 2.0.3`](https://github.com/espressif/arduino-esp32) for ESP32_S3-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/) for ESP32_S3 until [ESP32-S3 Powercycling right after uploading a sketch using Arduino IDE and Arduino Core 2.0.4 #7165](https://github.com/espressif/arduino-esp32/issues/7165) is fixed.
 
 ---
 ---
@@ -118,9 +128,9 @@ You can also use this link [![arduino-library-badge](https://www.ardu-badge.com/
 Another way to install is to:
 
 1. Navigate to [**AsyncTCP_SSL**](https://github.com/khoih-prog/AsyncTCP_SSL) page.
-2. Download the latest release `AsyncTCP_SSL-master.zip`.
-3. Extract the zip file to `AsyncTCP_SSL-master` directory 
-4. Copy whole `AsyncTCP_SSL-master` folder to Arduino libraries' directory such as `~/Arduino/libraries/`.
+2. Download the latest release `AsyncTCP_SSL-main.zip`.
+3. Extract the zip file to `AsyncTCP_SSL-main` directory 
+4. Copy whole `AsyncTCP_SSL-main` folder to Arduino libraries' directory such as `~/Arduino/libraries/`.
 
 ### VS Code & PlatformIO
 
@@ -270,8 +280,8 @@ Following is the debug terminal when running example [AsyncHTTPSRequest_ESP](htt
 
 ```
 Starting AsyncHTTPSRequest_ESP using ESP32_DEV
-AsyncTCP_SSL v1.2.0
-AsyncHTTPSRequest_Generic v1.3.0
+AsyncTCP_SSL v1.3.0
+AsyncHTTPSRequest_Generic v2.1.0
 Connecting to WiFi SSID: HueNet1
 .......
 AsyncHTTPSRequest @ IP : 192.168.2.133
@@ -319,8 +329,8 @@ Following is the debug terminal when running example [AsyncHTTPSRequest_ESP](htt
 
 ```
 Starting AsyncHTTPSRequest_ESP using ESP32S2_DEV
-AsyncTCP_SSL v1.2.0
-AsyncHTTPSRequest_Generic v1.3.0
+AsyncTCP_SSL v1.3.0
+AsyncHTTPSRequest_Generic v2.1.0
 Connecting to WiFi SSID: HueNet1
 .......
 AsyncHTTPSRequest @ IP : 192.168.2.79
@@ -349,21 +359,21 @@ AsyncHTTPSRequest @ IP : 192.168.2.79
 [ATCP] _handle_async_event: LWIP_TCP_RECV = 0x3FFE5024
 [ATCP] _recv: tot_len = 1016
 **************************************
-abbreviation: EST
+abbreviation: EDT
 client_ip: aaa.bbb.ccc.ddd
-datetime: 2022-01-23T21:21:03.766116-05:00
+datetime: 2022-09-04T19:27:33.745787-04:00
 day_of_week: 0
-day_of_year: 23
-dst: false
-dst_from: 
-dst_offset: 0
-dst_until: 
+day_of_year: 247
+dst: true
+dst_from: 2022-03-13T07:00:00+00:00
+dst_offset: 3600
+dst_until: 2022-11-06T06:00:00+00:00
 raw_offset: -18000
 timezone: America/Toronto
-unixtime: 1642990863
-utc_datetime: 2022-01-24T02:21:03.766116+00:00
-utc_offset: -05:00
-week_number: 3
+unixtime: 1662334053
+utc_datetime: 2022-09-04T23:27:33.745787+00:00
+utc_offset: -04:00
+week_number: 35
 **************************************
 ```
 
@@ -375,27 +385,27 @@ Following is the debug terminal when running example [AsyncHTTPSRequest_ESP](htt
 
 ```
 Starting AsyncHTTPSRequest_ESP using ESP32C3_DEV
-AsyncTCP_SSL v1.2.0
-AsyncHTTPSRequest_Generic v1.3.0
+AsyncTCP_SSL v1.3.0
+AsyncHTTPSRequest_Generic v2.1.0
 Connecting to WiFi SSID: HueNet1
 .........
 AsyncHTTPSRequest @ IP : 192.168.2.80
 **************************************
-abbreviation: EST
+abbreviation: EDT
 client_ip: aaa.bbb.ccc.ddd
-datetime: 2022-01-23T21:24:07.839337-05:00
+datetime: 2022-09-04T19:27:33.745787-04:00
 day_of_week: 0
-day_of_year: 23
-dst: false
-dst_from: 
-dst_offset: 0
-dst_until: 
+day_of_year: 247
+dst: true
+dst_from: 2022-03-13T07:00:00+00:00
+dst_offset: 3600
+dst_until: 2022-11-06T06:00:00+00:00
 raw_offset: -18000
 timezone: America/Toronto
-unixtime: 1642991047
-utc_datetime: 2022-01-24T02:24:07.839337+00:00
-utc_offset: -05:00
-week_number: 3
+unixtime: 1662334053
+utc_datetime: 2022-09-04T23:27:33.745787+00:00
+utc_offset: -04:00
+week_number: 35
 **************************************
 ```
 
@@ -408,31 +418,104 @@ Following is the debug terminal when running example [AsyncHTTPSRequest_ESP_WiFi
 ```
 Starting AsyncHTTPSRequest_ESP_WiFiManager using LittleFS on ESP32_DEV
 ESPAsync_WiFiManager v1.11.0
-AsyncTCP_SSL v1.2.0
-AsyncHTTPSRequest_Generic v1.3.0
+AsyncTCP_SSL v1.3.0
+AsyncHTTPSRequest_Generic v2.1.0
 Stored: SSID = HueNet1, Pass = 12345678
 Got stored Credentials. Timeout 120s
 ConnectMultiWiFi in setup
 After waiting 11.38 secs more in setup(), connection result is connected. Local IP: 192.168.2.232
 H
 **************************************
-abbreviation: EST
+abbreviation: EDT
 client_ip: aaa.bbb.ccc.ddd
-datetime: 2022-01-23T21:18:03.759271-05:00
+datetime: 2022-09-04T19:41:10.727385-04:00
 day_of_week: 0
-day_of_year: 23
-dst: false
-dst_from: 
-dst_offset: 0
-dst_until: 
+day_of_year: 247
+dst: true
+dst_from: 2022-03-13T07:00:00+00:00
+dst_offset: 3600
+dst_until: 2022-11-06T06:00:00+00:00
 raw_offset: -18000
 timezone: America/Toronto
-unixtime: 1642990683
-utc_datetime: 2022-01-24T02:18:03.759271+00:00
-utc_offset: -05:00
-week_number: 3
+unixtime: 1662334870
+utc_datetime: 2022-09-04T23:41:10.727385+00:00
+utc_offset: -04:00
+week_number: 35
 **************************************
 H
+```
+
+---
+
+#### 5. AsyncHTTPSRequest_ESP_Multi on ESP32S3_DEV
+
+Following is the debug terminal when running example [AsyncHTTPSRequest_ESP_Multi](https://github.com/khoih-prog/AsyncHTTPSRequest_Generic/tree/main/examples/AsyncHTTPSRequest_ESP_Multi) on **ESP32S3_DEV on ESP32 core v2.0.3** to demonstrate the operation of SSL Async HTTPS request, using [AsyncTCP_SSL Library](https://github.com/khoih-prog/AsyncTCP_SSL)
+
+
+```
+Starting AsyncHTTPSRequest_ESP_Multi on ESP32S3_DEV
+AsyncTCP_SSL v1.3.0
+AsyncHTTPSRequest_Generic v2.1.0
+Connecting to WiFi SSID: HueNet1
+...
+AsyncHTTPSRequest @ IP : 192.168.2.187
+
+Sending request: https://worldtimeapi.org/api/timezone/Europe/Prague.txt
+
+Sending request: https://www.myexternalip.com/raw
+[AHTTPS] _onError handler SSL error = OK
+
+**************************************
+[AHTTPS] Response Code =  HTTP OK
+
+**************************************
+abbreviation: CEST
+client_ip: aaa.bbb.ccc.ddd
+datetime: 2022-09-05T01:27:33.313946+02:00
+day_of_week: 1
+day_of_year: 248
+dst: true
+dst_from: 2022-03-27T01:00:00+00:00
+dst_offset: 3600
+dst_until: 2022-10-30T01:00:00+00:00
+raw_offset: 3600
+timezone: Europe/Prague
+unixtime: 1662334053
+utc_datetime: 2022-09-04T23:27:33.313946+00:00
+utc_offset: +02:00
+week_number: 36
+**************************************
+
+Sending request: [AHTTPS] _onError handler SSL error = OK
+https://worldtimeapi.org/api/timezone/America/Toronto.txt
+
+**************************************
+[AHTTPS] Response Code =  HTTP OK
+
+**************************************
+abbreviation: EDT
+client_ip: aaa.bbb.ccc.ddd
+datetime: 2022-09-04T19:27:33.745787-04:00
+day_of_week: 0
+day_of_year: 247
+dst: true
+dst_from: 2022-03-13T07:00:00+00:00
+dst_offset: 3600
+dst_until: 2022-11-06T06:00:00+00:00
+raw_offset: -18000
+timezone: America/Toronto
+unixtime: 1662334053
+utc_datetime: 2022-09-04T23:27:33.745787+00:00
+utc_offset: -04:00
+week_number: 35
+**************************************
+
+**************************************
+[AHTTPS] Response Code =  HTTP OK
+
+**************************************
+aaa.bbb.ccc.ddd
+**************************************
 ```
 
 ---
@@ -481,6 +564,9 @@ Submit issues to: [AsyncTCP_SSL issues](https://github.com/khoih-prog/AsyncTCP_S
 3. Add debug feature
 4. Fix `multiple-definitions` linker error
 5. Add example
+6. Remove hard-code if possible
+7. Improve debug messages by adding functions to display `error/state messages` instead of `cryptic error/state number`
+8. Add support to `ESP32_S3`, using ESP32 core `v2.0.3`. **Don't use `ESP32_S3` with core v2.0.4**. Check [ESP32-S3 Powercycling right after uploading a sketch using Arduino IDE and Arduino Core 2.0.4 #7165](https://github.com/espressif/arduino-esp32/issues/7165)
 
 ---
 ---
