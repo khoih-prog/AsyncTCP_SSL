@@ -111,7 +111,7 @@ to apply the better and faster **asynchronous** feature of the **powerful** [Asy
 
  1. [`Arduino IDE 1.8.19+` for Arduino](https://github.com/arduino/Arduino). [![GitHub release](https://img.shields.io/github/release/arduino/Arduino.svg)](https://github.com/arduino/Arduino/releases/latest)
  2. [`ESP32 Core 2.0.4+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/) for ESP32, ESP32_S2, ESP32_C3
- 3. [`ESP32 Core 2.0.3`](https://github.com/espressif/arduino-esp32) for ESP32_S3-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/) for ESP32_S3 until [ESP32-S3 Powercycling right after uploading a sketch using Arduino IDE and Arduino Core 2.0.4 #7165](https://github.com/espressif/arduino-esp32/issues/7165) is fixed.
+ 3. [`ESP32 Core 2.0.3`](https://github.com/espressif/arduino-esp32) for ESP32_S3-based boards. For ESP32_S3 until [ESP32-S3 Powercycling right after uploading a sketch using Arduino IDE and Arduino Core 2.0.4 #7165](https://github.com/espressif/arduino-esp32/issues/7165) is fixed.
 
 ---
 ---
@@ -287,39 +287,39 @@ Connecting to WiFi SSID: HueNet1
 AsyncHTTPSRequest @ IP : 192.168.2.133
 
 **************************************
-abbreviation: EST
+abbreviation: EDT
 client_ip: aaa.bbb.ccc.ddd
-datetime: 2022-01-23T21:17:05.405121-05:00
+datetime: 2022-09-04T19:41:10.727385-04:00
 day_of_week: 0
-day_of_year: 23
-dst: false
-dst_from: 
-dst_offset: 0
-dst_until: 
+day_of_year: 247
+dst: true
+dst_from: 2022-03-13T07:00:00+00:00
+dst_offset: 3600
+dst_until: 2022-11-06T06:00:00+00:00
 raw_offset: -18000
 timezone: America/Toronto
-unixtime: 1642990625
-utc_datetime: 2022-01-24T02:17:05.405121+00:00
-utc_offset: -05:00
-week_number: 3
+unixtime: 1662334870
+utc_datetime: 2022-09-04T23:41:10.727385+00:00
+utc_offset: -04:00
+week_number: 35
 **************************************
 HHHHHH
 **************************************
-abbreviation: EST
+abbreviation: EDT
 client_ip: aaa.bbb.ccc.ddd
-datetime: 2022-01-23T21:18:03.759271-05:00
+datetime: 2022-09-04T19:42:10.039223-04:00
 day_of_week: 0
-day_of_year: 23
-dst: false
-dst_from: 
-dst_offset: 0
-dst_until: 
+day_of_year: 247
+dst: true
+dst_from: 2022-03-13T07:00:00+00:00
+dst_offset: 3600
+dst_until: 2022-11-06T06:00:00+00:00
 raw_offset: -18000
 timezone: America/Toronto
-unixtime: 1642990683
-utc_datetime: 2022-01-24T02:18:03.759271+00:00
-utc_offset: -05:00
-week_number: 3
+unixtime: 1662334930
+utc_datetime: 2022-09-04T23:42:10.039223+00:00
+utc_offset: -04:00
+week_number: 35
 ```
 ---
 
