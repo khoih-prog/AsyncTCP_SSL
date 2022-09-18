@@ -14,8 +14,8 @@
   #error This code is intended to run on the ESP32 platform! Please check your Tools->Board setting.
 #endif
 
-#define ASYNC_TCP_SSL_VERSION_MIN_TARGET      "AsyncTCP_SSL v1.3.0"
-#define ASYNC_TCP_SSL_VERSION_MIN             1003000
+#define ASYNC_TCP_SSL_VERSION_MIN_TARGET      "AsyncTCP_SSL v1.3.1"
+#define ASYNC_TCP_SSL_VERSION_MIN             1003001
 
 #include "multiFileProject.h"
 

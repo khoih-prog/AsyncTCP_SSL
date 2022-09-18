@@ -57,7 +57,9 @@
 
 ### Important Note for ESP32_S3
 
-**Don't use `ESP32_S3` with core v2.0.4**. Check [ESP32-S3 Powercycling right after uploading a sketch using Arduino IDE and Arduino Core 2.0.4 #7165](https://github.com/espressif/arduino-esp32/issues/7165)
+**Don't use `ESP32_S3` with core v2.0.4**. Check `already fixed` [ESP32-S3 Powercycling right after uploading a sketch using Arduino IDE and Arduino Core 2.0.4 #7165](https://github.com/espressif/arduino-esp32/issues/7165)
+
+**ESP32_S3 is OK now with core v2.0.5**
 
 ---
 
@@ -101,7 +103,7 @@ to apply the better and faster **asynchronous** feature of the **powerful** [Asy
 1. `ESP32` boards, such as ESP32_DEV, etc.
 2. `ESP32_S2`-based boards, such as ESP32S2_DEV, ESP32_S2 Saola, etc.
 3. `ESP32_C3`-based boards, such as ESP32C3_DEV, etc.
-4. `ESP32_S3`-based boards, such as ESP32S3_DEV, etc., using ESP32 core `v2.0.3`
+4. `ESP32_S3`-based boards, such as ESP32S3_DEV, etc., using ESP32 core `v2.0.3` or `v2.0.5+`
 
 
 ---
@@ -110,8 +112,8 @@ to apply the better and faster **asynchronous** feature of the **powerful** [Asy
 ## Prerequisites
 
  1. [`Arduino IDE 1.8.19+` for Arduino](https://github.com/arduino/Arduino). [![GitHub release](https://img.shields.io/github/release/arduino/Arduino.svg)](https://github.com/arduino/Arduino/releases/latest)
- 2. [`ESP32 Core 2.0.4+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/) for ESP32, ESP32_S2, ESP32_C3
- 3. [`ESP32 Core 2.0.3`](https://github.com/espressif/arduino-esp32) for ESP32_S3-based boards. For ESP32_S3 until [ESP32-S3 Powercycling right after uploading a sketch using Arduino IDE and Arduino Core 2.0.4 #7165](https://github.com/espressif/arduino-esp32/issues/7165) is fixed.
+ 2. [`ESP32 Core 2.0.5+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/) for ESP32, ESP32_S2, ESP32_C3
+ 3. [`ESP32 Core 2.0.4`](https://github.com/espressif/arduino-esp32) can't be used for ESP32_S3-based boards. Check `already fixed` [ESP32-S3 Powercycling right after uploading a sketch using Arduino IDE and Arduino Core 2.0.4 #7165](https://github.com/espressif/arduino-esp32/issues/7165)
 
 ---
 ---
@@ -280,8 +282,8 @@ Following is the debug terminal when running example [AsyncHTTPSRequest_ESP](htt
 
 ```
 Starting AsyncHTTPSRequest_ESP using ESP32_DEV
-AsyncTCP_SSL v1.3.0
-AsyncHTTPSRequest_Generic v2.1.0
+AsyncTCP_SSL v1.3.1
+AsyncHTTPSRequest_Generic v2.1.2
 Connecting to WiFi SSID: HueNet1
 .......
 AsyncHTTPSRequest @ IP : 192.168.2.133
@@ -289,37 +291,37 @@ AsyncHTTPSRequest @ IP : 192.168.2.133
 **************************************
 abbreviation: EDT
 client_ip: aaa.bbb.ccc.ddd
-datetime: 2022-09-04T19:41:10.727385-04:00
+datetime: 2022-09-18T01:35:32.451975-04:00
 day_of_week: 0
-day_of_year: 247
+day_of_year: 261
 dst: true
 dst_from: 2022-03-13T07:00:00+00:00
 dst_offset: 3600
 dst_until: 2022-11-06T06:00:00+00:00
 raw_offset: -18000
 timezone: America/Toronto
-unixtime: 1662334870
-utc_datetime: 2022-09-04T23:41:10.727385+00:00
+unixtime: 1663479332
+utc_datetime: 2022-09-18T05:35:32.451975+00:00
 utc_offset: -04:00
-week_number: 35
+week_number: 37
 **************************************
 HHHHHH
 **************************************
 abbreviation: EDT
 client_ip: aaa.bbb.ccc.ddd
-datetime: 2022-09-04T19:42:10.039223-04:00
+datetime: 2022-09-18T01:36:31.992595-04:00
 day_of_week: 0
-day_of_year: 247
+day_of_year: 261
 dst: true
 dst_from: 2022-03-13T07:00:00+00:00
 dst_offset: 3600
 dst_until: 2022-11-06T06:00:00+00:00
 raw_offset: -18000
 timezone: America/Toronto
-unixtime: 1662334930
-utc_datetime: 2022-09-04T23:42:10.039223+00:00
+unixtime: 1663479391
+utc_datetime: 2022-09-18T05:36:31.992595+00:00
 utc_offset: -04:00
-week_number: 35
+week_number: 37
 ```
 ---
 
@@ -329,8 +331,8 @@ Following is the debug terminal when running example [AsyncHTTPSRequest_ESP](htt
 
 ```
 Starting AsyncHTTPSRequest_ESP using ESP32S2_DEV
-AsyncTCP_SSL v1.3.0
-AsyncHTTPSRequest_Generic v2.1.0
+AsyncTCP_SSL v1.3.1
+AsyncHTTPSRequest_Generic v2.1.2
 Connecting to WiFi SSID: HueNet1
 .......
 AsyncHTTPSRequest @ IP : 192.168.2.79
@@ -361,19 +363,19 @@ AsyncHTTPSRequest @ IP : 192.168.2.79
 **************************************
 abbreviation: EDT
 client_ip: aaa.bbb.ccc.ddd
-datetime: 2022-09-04T19:27:33.745787-04:00
+datetime: 2022-09-18T01:46:31.858783-04:00
 day_of_week: 0
-day_of_year: 247
+day_of_year: 261
 dst: true
 dst_from: 2022-03-13T07:00:00+00:00
 dst_offset: 3600
 dst_until: 2022-11-06T06:00:00+00:00
 raw_offset: -18000
 timezone: America/Toronto
-unixtime: 1662334053
-utc_datetime: 2022-09-04T23:27:33.745787+00:00
+unixtime: 1663479991
+utc_datetime: 2022-09-18T05:46:31.858783+00:00
 utc_offset: -04:00
-week_number: 35
+week_number: 37
 **************************************
 ```
 
@@ -385,27 +387,27 @@ Following is the debug terminal when running example [AsyncHTTPSRequest_ESP](htt
 
 ```
 Starting AsyncHTTPSRequest_ESP using ESP32C3_DEV
-AsyncTCP_SSL v1.3.0
-AsyncHTTPSRequest_Generic v2.1.0
+AsyncTCP_SSL v1.3.1
+AsyncHTTPSRequest_Generic v2.1.2
 Connecting to WiFi SSID: HueNet1
 .........
 AsyncHTTPSRequest @ IP : 192.168.2.80
 **************************************
 abbreviation: EDT
 client_ip: aaa.bbb.ccc.ddd
-datetime: 2022-09-04T19:27:33.745787-04:00
+datetime: 2022-09-18T01:35:32.451975-04:00
 day_of_week: 0
-day_of_year: 247
+day_of_year: 261
 dst: true
 dst_from: 2022-03-13T07:00:00+00:00
 dst_offset: 3600
 dst_until: 2022-11-06T06:00:00+00:00
 raw_offset: -18000
 timezone: America/Toronto
-unixtime: 1662334053
-utc_datetime: 2022-09-04T23:27:33.745787+00:00
+unixtime: 1663479332
+utc_datetime: 2022-09-18T05:35:32.451975+00:00
 utc_offset: -04:00
-week_number: 35
+week_number: 37
 **************************************
 ```
 
@@ -417,9 +419,9 @@ Following is the debug terminal when running example [AsyncHTTPSRequest_ESP_WiFi
 
 ```
 Starting AsyncHTTPSRequest_ESP_WiFiManager using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager v1.11.0
-AsyncTCP_SSL v1.3.0
-AsyncHTTPSRequest_Generic v2.1.0
+ESPAsync_WiFiManager v1.14.1
+AsyncTCP_SSL v1.3.1
+AsyncHTTPSRequest_Generic v2.1.2
 Stored: SSID = HueNet1, Pass = 12345678
 Got stored Credentials. Timeout 120s
 ConnectMultiWiFi in setup
@@ -428,19 +430,19 @@ H
 **************************************
 abbreviation: EDT
 client_ip: aaa.bbb.ccc.ddd
-datetime: 2022-09-04T19:41:10.727385-04:00
+datetime: 2022-09-18T01:36:31.992595-04:00
 day_of_week: 0
-day_of_year: 247
+day_of_year: 261
 dst: true
 dst_from: 2022-03-13T07:00:00+00:00
 dst_offset: 3600
 dst_until: 2022-11-06T06:00:00+00:00
 raw_offset: -18000
 timezone: America/Toronto
-unixtime: 1662334870
-utc_datetime: 2022-09-04T23:41:10.727385+00:00
+unixtime: 1663479391
+utc_datetime: 2022-09-18T05:36:31.992595+00:00
 utc_offset: -04:00
-week_number: 35
+week_number: 37
 **************************************
 H
 ```
@@ -454,8 +456,8 @@ Following is the debug terminal when running example [AsyncHTTPSRequest_ESP_Mult
 
 ```
 Starting AsyncHTTPSRequest_ESP_Multi on ESP32S3_DEV
-AsyncTCP_SSL v1.3.0
-AsyncHTTPSRequest_Generic v2.1.0
+AsyncTCP_SSL v1.3.1
+AsyncHTTPSRequest_Generic v2.1.2
 Connecting to WiFi SSID: HueNet1
 ...
 AsyncHTTPSRequest @ IP : 192.168.2.187
@@ -464,51 +466,7 @@ Sending request: https://worldtimeapi.org/api/timezone/Europe/Prague.txt
 
 Sending request: https://www.myexternalip.com/raw
 [AHTTPS] _onError handler SSL error = OK
-
-**************************************
-[AHTTPS] Response Code =  HTTP OK
-
-**************************************
-abbreviation: CEST
-client_ip: aaa.bbb.ccc.ddd
-datetime: 2022-09-05T01:27:33.313946+02:00
-day_of_week: 1
-day_of_year: 248
-dst: true
-dst_from: 2022-03-27T01:00:00+00:00
-dst_offset: 3600
-dst_until: 2022-10-30T01:00:00+00:00
-raw_offset: 3600
-timezone: Europe/Prague
-unixtime: 1662334053
-utc_datetime: 2022-09-04T23:27:33.313946+00:00
-utc_offset: +02:00
-week_number: 36
-**************************************
-
-Sending request: [AHTTPS] _onError handler SSL error = OK
-https://worldtimeapi.org/api/timezone/America/Toronto.txt
-
-**************************************
-[AHTTPS] Response Code =  HTTP OK
-
-**************************************
-abbreviation: EDT
-client_ip: aaa.bbb.ccc.ddd
-datetime: 2022-09-04T19:27:33.745787-04:00
-day_of_week: 0
-day_of_year: 247
-dst: true
-dst_from: 2022-03-13T07:00:00+00:00
-dst_offset: 3600
-dst_until: 2022-11-06T06:00:00+00:00
-raw_offset: -18000
-timezone: America/Toronto
-unixtime: 1662334053
-utc_datetime: 2022-09-04T23:27:33.745787+00:00
-utc_offset: -04:00
-week_number: 35
-**************************************
+[AHTTPS] _onError handler SSL error = OK
 
 **************************************
 [AHTTPS] Response Code =  HTTP OK
@@ -516,6 +474,51 @@ week_number: 35
 **************************************
 aaa.bbb.ccc.ddd
 **************************************
+
+**************************************
+[AHTTPS] Response Code =  HTTP OK
+
+**************************************
+abbreviation: CEST
+client_ip: aaa.bbb.ccc.ddd
+datetime: 2022-09-18T07:50:04.395849+02:00
+day_of_week: 0
+day_of_year: 261
+dst: true
+dst_from: 2022-03-27T01:00:00+00:00
+dst_offset: 3600
+dst_until: 2022-10-30T01:00:00+00:00
+raw_offset: 3600
+timezone: Europe/Prague
+unixtime: 1663480204
+utc_datetime: 2022-09-18T05:50:04.395849+00:00
+utc_offset: +02:00
+week_number: 37
+**************************************
+
+Sending request: https://worldtimeapi.org/api/timezone/America/Toronto.txt
+
+**************************************
+[AHTTPS] Response Code =  HTTP OK
+
+**************************************
+abbreviation: EDT
+client_ip: aaa.bbb.ccc.ddd
+datetime: 2022-09-18T01:50:05.382100-04:00
+day_of_week: 0
+day_of_year: 261
+dst: true
+dst_from: 2022-03-13T07:00:00+00:00
+dst_offset: 3600
+dst_until: 2022-11-06T06:00:00+00:00
+raw_offset: -18000
+timezone: America/Toronto
+unixtime: 1663480205
+utc_datetime: 2022-09-18T05:50:05.382100+00:00
+utc_offset: -04:00
+week_number: 37
+**************************************
+H
 ```
 
 ---
@@ -559,14 +562,17 @@ Submit issues to: [AsyncTCP_SSL issues](https://github.com/khoih-prog/AsyncTCP_S
 
 ## DONE
 
-1. Add support to ESP32 using SSL
-2. Add Table of Contents
-3. Add debug feature
-4. Fix `multiple-definitions` linker error
-5. Add example
-6. Remove hard-code if possible
-7. Improve debug messages by adding functions to display `error/state messages` instead of `cryptic error/state number`
-8. Add support to `ESP32_S3`, using ESP32 core `v2.0.3`. **Don't use `ESP32_S3` with core v2.0.4**. Check [ESP32-S3 Powercycling right after uploading a sketch using Arduino IDE and Arduino Core 2.0.4 #7165](https://github.com/espressif/arduino-esp32/issues/7165)
+ 1. Add support to ESP32 using SSL
+ 2. Add Table of Contents
+ 3. Add debug feature
+ 4. Fix `multiple-definitions` linker error
+ 5. Add examples
+ 6. Remove hard-code if possible
+ 7. Improve debug messages by adding functions to display `error/state messages` instead of `cryptic error/state number`
+ 8. Add support to `ESP32_S3`, using ESP32 core `v2.0.3`. **Don't use `ESP32_S3` with core v2.0.4**. Check [ESP32-S3 Powercycling right after uploading a sketch using Arduino IDE and Arduino Core 2.0.4 #7165](https://github.com/espressif/arduino-esp32/issues/7165)
+ 9. Increase `ASYNC_QUEUE_LENGTH` to default **512 from 32** and make it user-configurable
+10. Increase `ASYNC_TCP_PRIORITY` to default **10 from 3**, and make it user-configurable
+
 
 ---
 ---

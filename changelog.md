@@ -11,6 +11,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Releases v1.3.1](#Releases-v131)
   * [Releases v1.3.0](#Releases-v130)
   * [Releases v1.2.0](#Releases-v120)
   * [Releases v1.1.0](#Releases-v110)
@@ -20,6 +21,12 @@
 ---
 
 ## Changelog
+
+### Releases v1.3.1
+
+1. Increase `ASYNC_QUEUE_LENGTH` to default 512 from 32 and make it user-configurable
+2. Increase `ASYNC_TCP_PRIORITY` to default 10 from 3, and make it user-configurable
+
 
 ### Releases v1.3.0
 

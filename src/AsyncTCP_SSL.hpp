@@ -15,7 +15,7 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  
-  Version: 1.3.0
+  Version: 1.3.1
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -23,6 +23,7 @@
   1.1.0    K Hoang     22/10/2021 Fix bug. Enable coexistence with AsyncTCP
   1.2.0    K Hoang     23/01/2022 Fix `multiple-definitions` linker error
   1.3.0    K Hoang     04/09/2022 Clean up. Remove hard-code if possible
+  1.3.1    K Hoang     18/09/2022 Improve stability. Make queue length user-configurable
  *****************************************************************************************************************************/
  
 /*
@@ -49,19 +50,19 @@
 #ifndef ASYNCTCP_SSL_HPP
 #define ASYNCTCP_SSL_HPP
 
-#if !(ESP32)
+#if !defined(ESP32)
   #error This AsyncTCP_SSL library is supporting only ESP32
 #endif
 
 /////////////////////////////////////////////////
 
-#define ASYNC_TCP_SSL_VERSION             "AsyncTCP_SSL v1.3.0"
+#define ASYNC_TCP_SSL_VERSION             "AsyncTCP_SSL v1.3.1"
 
 #define ASYNC_TCP_SSL_VERSION_MAJOR       1
 #define ASYNC_TCP_SSL_VERSION_MINOR       3
-#define ASYNC_TCP_SSL_VERSION_PATCH       0
+#define ASYNC_TCP_SSL_VERSION_PATCH       1
 
-#define ASYNC_TCP_SSL_VERSION_INT         1003000
+#define ASYNC_TCP_SSL_VERSION_INT         1003001
 
 /////////////////////////////////////////////////
 
@@ -79,6 +80,7 @@
 
 extern "C" 
 {
+  #include "freertos/FreeRTOS.h"
   #include "freertos/semphr.h"
   #include "lwip/pbuf.h"
 }
@@ -109,11 +111,27 @@ enum tcp_state
 
 //If core is not defined, then we are running in Arduino or PIO
 #ifndef CONFIG_ASYNC_TCP_RUNNING_CORE
-  #define CONFIG_ASYNC_TCP_RUNNING_CORE     -1    //any available core
-  #define CONFIG_ASYNC_TCP_USE_WDT          1     //if enabled, adds between 33us and 200us per event
+  #define CONFIG_ASYNC_TCP_RUNNING_CORE     		-1    //any available core
+  #define CONFIG_ASYNC_TCP_USE_WDT          		1     //if enabled, adds between 33us and 200us per event
 #endif
 
-class AsyncSSLClient;
+/////////////////////////////////////////////////
+
+// Make ASYNC_QUEUE_LENGTH adjustable in sketch. Default 512
+#ifndef ASYNC_QUEUE_LENGTH
+  #define ASYNC_QUEUE_LENGTH 		512
+#endif
+
+// Make ASYNC_TCP_PRIORITY user-adjustable in sketch. Default 10, can't be less than 4
+#if !defined(CONFIG_ASYNC_TCP_PRIORITY)
+  #define CONFIG_ASYNC_TCP_PRIORITY 	(10)
+#elif (CONFIG_ASYNC_TCP_PRIORITY < 4)
+  #undef CONFIG_ASYNC_TCP_PRIORITY
+  #define CONFIG_ASYNC_TCP_PRIORITY 	(4)
+  #warning Adjust CONFIG_ASYNC_TCP_PRIORITY to 4
+#endif
+
+/////////////////////////////////////////////////
 
 #define ASYNC_MAX_ACK_TIME      5000
 #define ASYNC_WRITE_FLAG_COPY   0x01    //will allocate new buffer to hold the data while sending (else will hold reference to the data given)
@@ -121,6 +139,8 @@ class AsyncSSLClient;
 #define SSL_HANDSHAKE_TIMEOUT   5000    // timeout to complete SSL handshake
 
 //////////////////////////////////////////////////////////////////////////////////////////////
+
+class AsyncSSLClient;
 
 typedef std::function<void(void*, AsyncSSLClient*)> AcConnectHandlerSSL;
 typedef std::function<void(void*, AsyncSSLClient*, size_t len, uint32_t time)> AcAckHandlerSSL;
@@ -140,7 +160,7 @@ class AsyncSSLClient
 {
   public:
     AsyncSSLClient(tcp_pcb* pcb = 0);
-    ~AsyncSSLClient();
+    virtual ~AsyncSSLClient();
 
     AsyncSSLClient & operator=(const AsyncSSLClient &other);
     AsyncSSLClient & operator+=(const AsyncSSLClient &other);
@@ -165,13 +185,13 @@ class AsyncSSLClient
     bool    free();
 
     bool    canSend();        //ack is not pending
-    size_t  space();          //space available in the TCP window
     size_t  add(const char* data, size_t size, uint8_t apiflags = ASYNC_WRITE_FLAG_COPY); //add for sending
     bool    send();           //send all data added with the method above
 
+    virtual size_t  space();  //space available in the TCP window
     //write equals add()+send()
-    size_t  write(const char* data);
-    size_t  write(const char* data, size_t size, uint8_t apiflags = ASYNC_WRITE_FLAG_COPY); //only when canSend() == true
+    virtual size_t  write(const char* data);
+    virtual size_t  write(const char* data, size_t size, uint8_t apiflags = ASYNC_WRITE_FLAG_COPY); //only when canSend() == true
 
     uint8_t state();
     bool    connecting();

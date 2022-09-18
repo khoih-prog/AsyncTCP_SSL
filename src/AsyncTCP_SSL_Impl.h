@@ -15,7 +15,7 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  
-  Version: 1.3.0
+  Version: 1.3.1
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -23,6 +23,7 @@
   1.1.0    K Hoang     22/10/2021 Fix bug. Enable coexistence with AsyncTCP
   1.2.0    K Hoang     23/01/2022 Fix `multiple-definitions` linker error
   1.3.0    K Hoang     04/09/2022 Clean up. Remove hard-code if possible
+  1.3.1    K Hoang     18/09/2022 Improve stability. Make queue length user-configurable
  *****************************************************************************************************************************/
  
 /*
@@ -63,6 +64,8 @@ extern "C"
 }
 
 #include "esp_task_wdt.h"
+
+#define CONFIG_ASYNC_TCP_STACK 			(2*8192)
 
 #define ASYNC_TCP_SSL_DEBUG(...)
 
@@ -175,7 +178,7 @@ static inline bool _init_async_event_queue()
 {
   if (!_async_queue)
   {
-    _async_queue = xQueueCreate(32, sizeof(lwip_event_packet_t *));
+    _async_queue = xQueueCreate(ASYNC_QUEUE_LENGTH, sizeof(lwip_event_packet_t *));
 
     if (!_async_queue)
     {
@@ -377,7 +380,8 @@ static bool _start_async_task()
 
   if (!_async_service_task_handle)
   {
-    xTaskCreateUniversal(_async_service_task, "async_tcp_ssl", 8192 * 2, NULL, 3, &_async_service_task_handle, CONFIG_ASYNC_TCP_RUNNING_CORE);
+    xTaskCreateUniversal(_async_service_task, "async_tcp_ssl", CONFIG_ASYNC_TCP_STACK, NULL, CONFIG_ASYNC_TCP_PRIORITY,
+                         &_async_service_task_handle, CONFIG_ASYNC_TCP_RUNNING_CORE);
 
     if (!_async_service_task_handle)
     {
