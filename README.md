@@ -451,7 +451,7 @@ H
 
 #### 5. AsyncHTTPSRequest_ESP_Multi on ESP32S3_DEV
 
-Following is the debug terminal when running example [AsyncHTTPSRequest_ESP_Multi](https://github.com/khoih-prog/AsyncHTTPSRequest_Generic/tree/main/examples/AsyncHTTPSRequest_ESP_Multi) on **ESP32S3_DEV on ESP32 core v2.0.3** to demonstrate the operation of SSL Async HTTPS request, using [AsyncTCP_SSL Library](https://github.com/khoih-prog/AsyncTCP_SSL)
+Following is the debug terminal when running example [AsyncHTTPSRequest_ESP_Multi](https://github.com/khoih-prog/AsyncHTTPSRequest_Generic/tree/main/examples/AsyncHTTPSRequest_ESP_Multi) on **ESP32S3_DEV on ESP32 core v2.0.5** to demonstrate the operation of SSL Async HTTPS request, using [AsyncTCP_SSL Library](https://github.com/khoih-prog/AsyncTCP_SSL)
 
 
 ```
@@ -528,7 +528,8 @@ H
 
 Debug is enabled by default on Serial.
 
-You can also change the debugging level `_ASYNC_TCP_SSL_LOGLEVEL_` from 0 to 4 in the sketch (if using `src_h`) or in the library `cpp` file (if using `src_cpp`)
+You can also change the debugging level `_ASYNC_TCP_SSL_LOGLEVEL_` from 0 to 4 in the sketch
+
 
 ```cpp
 #define _ASYNC_TCP_SSL_LOGLEVEL_     1
@@ -569,7 +570,7 @@ Submit issues to: [AsyncTCP_SSL issues](https://github.com/khoih-prog/AsyncTCP_S
  5. Add examples
  6. Remove hard-code if possible
  7. Improve debug messages by adding functions to display `error/state messages` instead of `cryptic error/state number`
- 8. Add support to `ESP32_S3`, using ESP32 core `v2.0.3`. **Don't use `ESP32_S3` with core v2.0.4**. Check [ESP32-S3 Powercycling right after uploading a sketch using Arduino IDE and Arduino Core 2.0.4 #7165](https://github.com/espressif/arduino-esp32/issues/7165)
+ 8. Add support to `ESP32_S3`, using ESP32 core `v2.0.3` or `v2.0.5+`. **Don't use `ESP32_S3` with core v2.0.4**. Check `already fixed` [ESP32-S3 Powercycling right after uploading a sketch using Arduino IDE and Arduino Core 2.0.4 #7165](https://github.com/espressif/arduino-esp32/issues/7165)
  9. Increase `ASYNC_QUEUE_LENGTH` to default **512 from 32** and make it user-configurable
 10. Increase `ASYNC_TCP_PRIORITY` to default **10 from 3**, and make it user-configurable
 
