@@ -32,7 +32,7 @@
   * [1. ESP32 has 2 ADCs, named ADC1 and ADC2](#1--esp32-has-2-adcs-named-adc1-and-adc2)
   * [2. ESP32 ADCs functions](#2-esp32-adcs-functions)
   * [3. ESP32 WiFi uses ADC2 for WiFi functions](#3-esp32-wifi-uses-adc2-for-wifi-functions)
-* [Orignal documentation](#Orignal-documentation)
+* [Original documentation](#Original-documentation)
   * [AsyncSSLClient](#AsyncSSLClient)
 * [Examples](#examples)
   * [1. multiFileProject](examples/multiFileProject)
@@ -254,7 +254,7 @@ Look in file [**adc_common.c**](https://github.com/espressif/esp-idf/blob/master
 ---
 
 
-## Orignal documentation
+## Original documentation
 
 For ESP32, check [AsyncTCP Library](https://github.com/me-no-dev/AsyncTCP)
 
