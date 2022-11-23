@@ -24,26 +24,30 @@
 // To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include "AsyncTCP_SSL.h"
 
-void setup() 
+void setup()
 {
   Serial.begin(115200);
+
   while (!Serial && millis() < 5000);
-  
-  Serial.println("\nStart multiFileProject on "); Serial.println(ARDUINO_BOARD);
+
+  Serial.println("\nStart multiFileProject on ");
+  Serial.println(ARDUINO_BOARD);
   Serial.println(ASYNC_TCP_SSL_VERSION);
 
 #if defined(ASYNC_TCP_SSL_VERSION_MIN)
+
   if (ASYNC_TCP_SSL_VERSION_INT < ASYNC_TCP_SSL_VERSION_MIN)
   {
     Serial.print("Warning. Must use this example on Version equal or later than : ");
     Serial.println(ASYNC_TCP_SSL_VERSION_MIN_TARGET);
   }
+
 #endif
 
   Serial.print("You're OK now");
 }
 
-void loop() 
+void loop()
 {
   // put your main code here, to run repeatedly:
 }
